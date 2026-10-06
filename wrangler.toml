@@ -1,0 +1,7 @@
+name = "mama-coupang-api"
+main = "worker.js"
+compatibility_date = "2026-10-06"
+
+[vars]
+COUPANG_API_BASE = "https://api-gateway.coupang.com"
+BEST_CATEGORY_ID = "1014"

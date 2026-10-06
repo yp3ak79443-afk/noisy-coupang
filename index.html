@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f97316">
+  <meta name="description" content="媽媽好難｜酷澎優惠、Goldbox、熱門商品與暢銷商品">
+  <title>媽媽好難｜酷澎優惠</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap nav">
+    <a class="logo" href="./">媽媽好難 <span>× 酷澎</span></a>
+    <a class="line-btn" href="https://line.me/ti/g2/Nk32r-7LoAClQc-OWqNbH3yzqUzCZT2Re8s0Mg?utm_source" target="_blank" rel="noopener">加入 LINE 社群</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">COUPANG PARTNERS</p>
+      <h1>每天幫你找出<br><strong>值得買的酷澎優惠</strong></h1>
+      <p class="hero-text">Goldbox、熱門分類、暢銷商品一次整理。看到喜歡的商品，直接前往酷澎查看最新價格。</p>
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="搜尋商品，例如：衛生紙、洗衣精、吸塵器">
+        <button id="searchBtn" type="button">搜尋</button>
+      </div>
+      <p id="status" class="status"></p>
+    </div>
+  </section>
+
+  <section class="wrap section">
+    <div class="section-head">
+      <div><p class="eyebrow">TODAY</p><h2>今日 Goldbox</h2></div>
+      <button id="refreshGoldbox" class="ghost" type="button">重新整理</button>
+    </div>
+    <div id="goldbox" class="grid"></div>
+  </section>
+
+  <section class="wrap section">
+    <div class="section-head"><div><p class="eyebrow">TRENDING</p><h2>熱門分類</h2></div></div>
+    <div id="categories" class="chips"></div>
+  </section>
+
+  <section class="wrap section">
+    <div class="section-head"><div><p class="eyebrow">POPULAR</p><h2 id="categoryTitle">熱門商品</h2></div></div>
+    <div id="products" class="grid"></div>
+  </section>
+
+  <section class="wrap section">
+    <div class="section-head"><div><p class="eyebrow">BEST SELLERS</p><h2>暢銷商品</h2></div></div>
+    <div id="best" class="grid"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">媽媽好難 × 酷澎優惠｜商品價格、庫存與配送條件以酷澎頁面為準</div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
