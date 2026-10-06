@@ -12,7 +12,7 @@
 */
 
 const DEFAULT_BASE = "https://api-gateway.coupang.com";
-const API_ROOT = "/v2/providers/affiliate_open_api/apis/openapi";
+const API_ROOT = "/v2/providers/affiliate_open_api/apis/openapi/v1";
 const ALLOW_ORIGIN = "*";
 
 export default {
