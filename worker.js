@@ -1,5 +1,5 @@
 /*
-  Cloudflare Worker
+  Cloudflare Worker - Coupang TW
   ------------------------------------------------------------
   Secrets（請用 wrangler secret put 設定，不要寫進 GitHub）：
   COUPANG_ACCESS_KEY
