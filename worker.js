@@ -250,30 +250,48 @@ if (url.pathname === "/api/events-products") {
             `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}` +
             `&imageSize=512x512`;
         
-const tunnelBase =
-  "https://science-perception-accommodations-buzz.trycloudflare.com";
+const subId =
+  url.searchParams.get("subId") ||
+  env.COUPANG_SUB_ID ||
+  "Kai";
 
-const response =
-  await fetch(
-    `${tunnelBase}/api/search?${query}`
-  );
+const imageSize =
+  url.searchParams.get("imageSize") ||
+  "512x512";
 
-const responseText =
-  await response.text();
+const query =
+  `keyword=${encodeURIComponent(keyword)}` +
+  `&limit=${limit}` +
+  `&subId=${encodeURIComponent(subId)}` +
+  `&imageSize=${encodeURIComponent(imageSize)}`;
 
-let data = null;
+const result = await callCoupang(
+  env,
+  baseUrl,
+  "GET",
+  path,
+  query,
+  null
+);
 
-try {
-  data = JSON.parse(responseText);
-} catch (e) {
-  data = null;
+if (!result.ok) {
+  return json({
+    ok: false,
+    status: result.status,
+    statusText: result.statusText,
+    endpoint: path,
+    contentType: result.contentType,
+    message: "Coupang search API request failed",
+    raw: result.body
+  }, corsHeaders, 200);
 }
 
 return json({
-  ok: response.ok,
-  status: response.status,
-  data,
-  raw: data ? null : responseText
+  ok: true,
+  data: result.data,
+  raw: result.data ? null : result.body,
+  status: result.status,
+  contentType: result.contentType
 }, corsHeaders);
 }
       // =========================
