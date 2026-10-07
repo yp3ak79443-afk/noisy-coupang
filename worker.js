@@ -493,7 +493,7 @@ function getSignedDate() {
     ).padStart(2, "0");
 
   return (
-    ${yyyy}${MM}${dd}T${HH}${mm}${ss}Z
+    `${yyyy}${MM}${dd}T${HH}${mm}${ss}Z`
   );
 }
 
