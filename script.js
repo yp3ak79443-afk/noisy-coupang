@@ -2,6 +2,11 @@ const API_BASE = "https://mama-coupang-api.yp3ak79443.workers.dev";
 
 const $ = id => document.getElementById(id);
 
+
+/* =========================
+   HTML 安全處理
+========================= */
+
 const esc = s =>
   String(s ?? "").replace(/[&<>"']/g, c => ({
     "&": "&amp;",
@@ -17,11 +22,11 @@ const esc = s =>
 ========================= */
 
 function getItems(d) {
+
   if (Array.isArray(d)) {
     return d;
   }
 
-  // 自動尋找酷澎 API 回傳的 productData
   if (Array.isArray(d?.data?.data?.data?.productData)) {
     return d.data.data.data.productData;
   }
@@ -38,8 +43,9 @@ function getItems(d) {
     return d.productData;
   }
 
-  // 最後用遞迴方式尋找 productData
+
   function findProductData(obj) {
+
     if (!obj || typeof obj !== "object") {
       return null;
     }
@@ -49,29 +55,106 @@ function getItems(d) {
     }
 
     for (const key of Object.keys(obj)) {
-      const result = findProductData(obj[key]);
+
+      const result =
+        findProductData(obj[key]);
 
       if (Array.isArray(result)) {
         return result;
       }
+
     }
 
     return null;
   }
 
+
   return findProductData(d) || [];
+
 }
+
+
+/* =========================
+   取得商品網址
+   優先使用分潤網址
+========================= */
+
+function getProductUrl(p) {
+
+  /*
+    如果你的酷澎 API 已經回傳分潤網址，
+    這裡會自動抓取。
+
+    支援常見欄位：
+    affiliateUrl
+    affiliateURL
+    partnerUrl
+    partnerURL
+    deeplink
+    deepLink
+    trackingUrl
+    trackingURL
+  */
+
+  const affiliateUrl =
+    p.affiliateUrl ||
+    p.affiliateURL ||
+    p.partnerUrl ||
+    p.partnerURL ||
+    p.deeplink ||
+    p.deepLink ||
+    p.trackingUrl ||
+    p.trackingURL;
+
+
+  if (
+    affiliateUrl &&
+    typeof affiliateUrl === "string" &&
+    affiliateUrl.startsWith("http")
+  ) {
+
+    return {
+      url: affiliateUrl,
+      isAffiliate: true
+    };
+
+  }
+
+
+  /*
+    如果沒有分潤網址，
+    暫時使用一般商品網址。
+  */
+
+  const normalUrl =
+    p.productUrl ||
+    p.productUrlDirect ||
+    p.url ||
+    "#";
+
+
+  return {
+    url: normalUrl,
+    isAffiliate: false
+  };
+
+}
+
+
 /* =========================
    顯示商品
 ========================= */
 
 function render(items) {
 
-  const container = $("products");
+  const container =
+    $("products");
+
 
   if (!container) {
     return;
   }
+
 
   if (!items.length) {
 
@@ -79,141 +162,297 @@ function render(items) {
       "<div class='empty'>沒有找到符合條件的商品</div>";
 
     return;
+
   }
 
 
-  container.innerHTML = items.map(p => {
-
-    const img =
-      p.productImage ||
-      p.productImageUrl ||
-      p.imageUrl ||
-      p.lifestyleImageUrl ||
-      "";
-
-    const url =
-      p.productUrl ||
-      p.productUrlDirect ||
-      "#";
-
-    const name =
-      p.productName ||
-      p.title ||
-      "酷澎商品";
-
-    const price =
-      Number(
-        p.productPrice ||
-        p.salePrice ||
-        p.firstPurchasePrice ||
-        0
-      );
-
-    const firstPurchasePrice =
-      Number(p.firstPurchasePrice || 0);
-
-    const rocket =
-      p.isRocket === true;
-
-    return `
-      <article class="card">
-
-        <div class="pic">
-
-          ${
-            img
-              ? `
-                <img
-                  loading="lazy"
-                  src="${esc(img)}"
-                  alt="${esc(name)}"
-                  onerror="this.style.display='none'"
-                >
-              `
-              : `
-                <div class="no-image">
-                  暫無圖片
-                </div>
-              `
-          }
-
-        </div>
+  container.innerHTML =
+    items.map(p => {
 
 
-        <div class="body">
+      /* ---------- 圖片 ---------- */
 
-          <div class="name">
-            ${esc(name)}
-          </div>
-
-
-          ${
-            price
-              ? `
-                <div class="price">
-                  NT$ ${price.toLocaleString("zh-TW")}
-                </div>
-              `
-              : ""
-          }
+      const img =
+        p.productImage ||
+        p.productImageUrl ||
+        p.imageUrl ||
+        p.lifestyleImageUrl ||
+        "";
 
 
-          ${
-            firstPurchasePrice &&
-            firstPurchasePrice < price
-              ? `
-                <div class="first-price">
-                  首購優惠 NT$ ${firstPurchasePrice.toLocaleString("zh-TW")}
-                </div>
-              `
-              : ""
-          }
+      /* ---------- 商品網址 ---------- */
+
+      const productLink =
+        getProductUrl(p);
+
+      const url =
+        productLink.url;
+
+      const isAffiliate =
+        productLink.isAffiliate;
 
 
-          <div class="meta">
+      /* ---------- 商品名稱 ---------- */
+
+      const name =
+        p.productName ||
+        p.title ||
+        "酷澎商品";
+
+
+      /* ---------- 價格 ---------- */
+
+      const price =
+        Number(
+          p.productPrice ||
+          p.salePrice ||
+          p.price ||
+          p.firstPurchasePrice ||
+          0
+        );
+
+
+      /* ---------- 首購價 ---------- */
+
+      const firstPurchasePrice =
+        Number(
+          p.firstPurchasePrice ||
+          p.firstOrderPrice ||
+          p.firstPurchaseProductPrice ||
+          0
+        );
+
+
+      /* ---------- 首購省多少 ---------- */
+
+      const firstSave =
+        (
+          price > 0 &&
+          firstPurchasePrice > 0 &&
+          firstPurchasePrice < price
+        )
+          ? price - firstPurchasePrice
+          : 0;
+
+
+      /* ---------- Rocket ---------- */
+
+      const rocket =
+        p.isRocket === true ||
+        p.rocket === true;
+
+
+      /* ---------- 評價 ---------- */
+
+      const rating =
+        Number(
+          p.rating ||
+          p.productRating ||
+          0
+        );
+
+
+      /* ---------- 評價數 ---------- */
+
+      const reviewCount =
+        Number(
+          p.reviewCount ||
+          p.ratingCount ||
+          p.reviewCnt ||
+          0
+        );
+
+
+      return `
+        <article class="card">
+
+
+          <!-- 商品圖片 -->
+
+          <div class="pic">
 
             ${
-              rocket
+              img
+
                 ? `
-                  <span class="tag rocket">
-                    🚀 Rocket
-                  </span>
+                  <img
+                    loading="lazy"
+                    src="${esc(img)}"
+                    alt="${esc(name)}"
+                    onerror="this.style.display='none'"
+                  >
                 `
-                : ""
+
+                : `
+                  <div class="no-image">
+                    暫無圖片
+                  </div>
+                `
             }
 
           </div>
 
 
-          ${
-            url !== "#"
-              ? `
-                <a
-                  class="buy"
-                  href="${esc(url)}"
-                  target="_blank"
-                  rel="noopener sponsored nofollow"
-                >
-                  前往酷澎
-                </a>
-              `
-              : `
-                <button
-                  class="buy"
-                  type="button"
-                  disabled
-                >
-                  暫無商品連結
-                </button>
-              `
-          }
+          <!-- 商品內容 -->
 
-        </div>
+          <div class="body">
 
-      </article>
-    `;
 
-  }).join("");
+            <!-- 商品名稱 -->
+
+            <div class="name">
+              ${esc(name)}
+            </div>
+
+
+            <!-- 價格 -->
+
+            ${
+              price
+
+                ? `
+                  <div class="price">
+                    NT$ ${price.toLocaleString("zh-TW")}
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            <!-- 首購價格 -->
+
+            ${
+              firstPurchasePrice &&
+              firstPurchasePrice < price
+
+                ? `
+                  <div class="first-price">
+                    🔥 首購優惠
+                    NT$ ${firstPurchasePrice.toLocaleString("zh-TW")}
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            <!-- 首購省多少 -->
+
+            ${
+              firstSave > 0
+
+                ? `
+                  <div class="save">
+                    省 NT$ ${firstSave.toLocaleString("zh-TW")}
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            <!-- 商品資訊 -->
+
+            <div class="meta">
+
+
+              ${
+                rocket
+
+                  ? `
+                    <span class="tag rocket">
+                      🚀 Rocket
+                    </span>
+                  `
+
+                  : ""
+              }
+
+
+              ${
+                rating > 0
+
+                  ? `
+                    <span class="tag rating">
+                      ⭐ ${rating.toFixed(1)}
+                    </span>
+                  `
+
+                  : ""
+              }
+
+
+              ${
+                reviewCount > 0
+
+                  ? `
+                    <span class="tag reviews">
+                      ${reviewCount.toLocaleString("zh-TW")} 評價
+                    </span>
+                  `
+
+                  : ""
+              }
+
+
+            </div>
+
+
+            <!-- 分潤提示 -->
+
+            ${
+              isAffiliate
+
+                ? `
+                  <div class="affiliate-badge">
+                    💰 分潤優惠連結
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            <!-- 前往酷澎 -->
+
+            ${
+              url !== "#"
+
+                ? `
+                  <a
+                    class="buy"
+                    href="${esc(url)}"
+                    target="_blank"
+                    rel="noopener sponsored nofollow"
+                  >
+                    ${
+                      isAffiliate
+                        ? "🔥 前往酷澎優惠"
+                        : "前往酷澎"
+                    }
+                  </a>
+                `
+
+                : `
+                  <button
+                    class="buy"
+                    type="button"
+                    disabled
+                  >
+                    暫無商品連結
+                  </button>
+                `
+            }
+
+
+          </div>
+
+        </article>
+      `;
+
+    }).join("");
+
 }
 
 
@@ -223,13 +462,18 @@ function render(items) {
 
 async function search() {
 
-  const input = $("searchInput");
+  const input =
+    $("searchInput");
+
 
   if (!input) {
     return;
   }
 
-  const q = input.value.trim();
+
+  const q =
+    input.value.trim();
+
 
   if (!q) {
 
@@ -237,6 +481,7 @@ async function search() {
       "請輸入商品名稱";
 
     return;
+
   }
 
 
@@ -244,14 +489,16 @@ async function search() {
     `正在搜尋「${q}」…`;
 
 
-  $("searchBtn").disabled = true;
+  $("searchBtn").disabled =
+    true;
 
 
   try {
 
+
     const apiUrl =
-      `${API_BASE}/api/search` +
-      `?keyword=${encodeURIComponent(q)}` +
+      ${API_BASE}/api/search +
+      ?keyword=${encodeURIComponent(q)} +
       `&limit=10`;
 
 
@@ -271,10 +518,12 @@ async function search() {
       d =
         JSON.parse(t);
 
-    } catch {
+    }
+
+    catch {
 
       throw new Error(
-        `API 回傳格式錯誤（HTTP ${r.status}）`
+        API 回傳格式錯誤（HTTP ${r.status}）
       );
 
     }
@@ -284,7 +533,7 @@ async function search() {
 
       throw new Error(
         d?.message ||
-        `API 錯誤（HTTP ${r.status}）`
+        API 錯誤（HTTP ${r.status}）
       );
 
     }
@@ -313,11 +562,15 @@ async function search() {
 
     $("status").textContent =
       items.length
-        ? `找到 ${items.length} 筆商品`
+
+        ? 找到 ${items.length} 筆商品
+
         : "沒有找到符合條件的商品";
 
 
-  } catch (e) {
+  }
+
+  catch (e) {
 
     console.error(e);
 
@@ -332,8 +585,10 @@ async function search() {
     $("status").textContent =
       "搜尋失敗";
 
+  }
 
-  } finally {
+
+  finally {
 
     $("searchBtn").disabled =
       false;
@@ -353,13 +608,14 @@ const searchForm =
 
 if (searchForm) {
 
-  searchForm.onsubmit = e => {
+  searchForm.onsubmit =
+    e => {
 
-    e.preventDefault();
+      e.preventDefault();
 
-    search();
+      search();
 
-  };
+    };
 
 }
 
@@ -374,42 +630,51 @@ const clearBtn =
 
 if (clearBtn) {
 
-  clearBtn.onclick = () => {
+  clearBtn.onclick =
+    () => {
 
-    $("searchInput").value = "";
+      $("searchInput").value =
+        "";
 
-    $("resultTitle").textContent =
-      "搜尋商品";
+      $("resultTitle").textContent =
+        "搜尋商品";
 
-    $("status").textContent =
-      "";
+      $("status").textContent =
+        "";
 
-    $("products").innerHTML =
-      "<div class='empty'>輸入商品名稱開始搜尋</div>";
+      $("products").innerHTML =
+        `
+        <div class="empty">
+          輸入商品名稱開始搜尋
+        </div>
+        `;
 
-  };
+    };
 
 }
 
 
 /* =========================
-   快速搜尋按鈕
+   快速搜尋
 ========================= */
 
 document
   .querySelectorAll("[data-keyword]")
   .forEach(button => {
 
-    button.onclick = () => {
+    button.onclick =
+      () => {
 
-      const keyword =
-        button.dataset.keyword;
+        const keyword =
+          button.dataset.keyword;
 
-      $("searchInput").value =
-        keyword;
 
-      search();
+        $("searchInput").value =
+          keyword;
 
-    };
+
+        search();
+
+      };
 
   });
