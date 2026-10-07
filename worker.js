@@ -115,7 +115,7 @@ if (url.pathname === "/api/events") {
   const path = `${API_ROOT}/v1/events`;
 
   const query =
-    limit=${limit} +
+    `limit=${limit} `+
     `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}`;
 
   const result = await callCoupang(
@@ -179,9 +179,9 @@ if (url.pathname === "/api/events-products") {
     `${API_ROOT}/v1/events/${encodeURIComponent(eventId)}/products`;
 
   const query =
-    limit=${limit} +
-    &offset=${offset} +
-    &subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")} +
+    `limit=${limit}` +
+    `&offset=${offset}` +
+    `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}` +
     `&imageSize=512x512`;
 
   const result = await callCoupang(
