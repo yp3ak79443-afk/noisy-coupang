@@ -129,9 +129,9 @@ export default {
 
         // 正確的 Query String
         const query =
-            `keyword=${encodeURIComponent(keyword)} +
-            `&limit=${limit} +
-            `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")} +
+            `keyword=${encodeURIComponent(keyword)}` +
+            `&limit=${limit}` +
+            `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}` +
             `&imageSize=512x512`;
         
         const result =
