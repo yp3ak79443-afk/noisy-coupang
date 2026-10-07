@@ -1,1 +1,156 @@
-const DEFAULT_BASE="https://api-gateway.tw.coupang.com";const API_ROOT="/v2/providers/affiliate_open_api/apis/openapi";export default{async fetch(request,env){if(request.method==="OPTIONS")return new Response(null,{headers:cors()});const u=new URL(request.url);try{if(u.pathname==="/api/health")return json({ok:true,service:"coupang-affiliate-worker",gateway:env.COUPANG_API_BASE||DEFAULT_BASE});if(u.pathname==="/api/debug")return debug(env);if(u.pathname==="/api/search"){const keyword=(u.searchParams.get("keyword")||"").trim();if(!keyword)return json({ok:false,message:"請輸入搜尋關鍵字"},400);return call(env,"GET",`${API_ROOT}/products/search`,new URLSearchParams({keyword,limit:String(Math.min(Number(u.searchParams.get("limit")||20),20)),subId:env.COUPANG_SUB_ID,imageSize:"512x512"}).toString())}return json({ok:false,message:"Not Found"},404)}catch(e){return json({ok:false,message:e.message||"Worker error"},500)}}};async function debug(env){const r=await fetch((env.COUPANG_API_BASE||DEFAULT_BASE)+"/",{headers:{"X-MARKET":"TW"}});return json({ok:true,status:r.status,contentType:r.headers.get("content-type")||"",body:(await r.text()).slice(0,1000)})}async function call(env,method,path,query){if(!env.COUPANG_ACCESS_KEY||!env.COUPANG_SECRET_KEY)return json({ok:false,message:"Worker 尚未設定酷澎 API 憑證"},500);const d=new Date(),sd=String(d.getUTCFullYear()).slice(2)+String(d.getUTCMonth()+1).padStart(2,"0")+String(d.getUTCDate()).padStart(2,"0")+"T"+String(d.getUTCHours()).padStart(2,"0")+String(d.getUTCMinutes()).padStart(2,"0")+String(d.getUTCSeconds()).padStart(2,"0")+"Z";const sig=await hmac(env.COUPANG_SECRET_KEY,sd+method+path+query);const target=(env.COUPANG_API_BASE||DEFAULT_BASE)+path+"?"+query;const r=await fetch(target,{headers:{Authorization:`CEA algorithm=HmacSHA256, access-key=${env.COUPANG_ACCESS_KEY}, signed-date=${sd}, signature=${sig}`,"X-MARKET":"TW","Content-Type":"application/json;charset=UTF-8","User-Agent":"coupang-affiliate-site"}});const text=await r.text();let data;try{data=JSON.parse(text)}catch{data={raw:text.slice(0,1500)}}if(!r.ok||data.raw)return json({ok:false,status:r.status,statusText:r.statusText,endpoint:path,message:data.rMessage||data.message||"Coupang API request failed",coupang:data},r.ok?502:r.status);return json(data,r.status)}async function hmac(secret,msg){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(secret),{name:"HMAC",hash:"SHA-256"},false,["sign"]);const s=await crypto.subtle.sign("HMAC",k,new TextEncoder().encode(msg));return[...new Uint8Array(s)].map(b=>b.toString(16).padStart(2,"0")).join("")}function cors(){return{"Access-Control-Allow-Origin":"*","Access-Control-Allow-Methods":"GET,OPTIONS","Access-Control-Allow-Headers":"Content-Type,Authorization"}}function json(d,s=200){return new Response(JSON.stringify(d),{status:s,headers:{"Content-Type":"application/json;charset=UTF-8",...cors()}})}
+const DEFAULT_BASE="https://api-gateway.tw.coupang.com";
+const API_ROOT="/v2/providers/affiliate_open_api/apis/openapi";
+
+export default{async fetch(request,env){
+if(request.method==="OPTIONS")return new Response(null,{headers:cors()});
+const u=new URL(request.url);
+
+try{
+if(u.pathname==="/api/health")
+return json({
+ok:true,
+service:"coupang-affiliate-worker",
+gateway:env.COUPANG_API_BASE||DEFAULT_BASE
+});
+
+if(u.pathname==="/api/debug")return debug(env);
+
+if(u.pathname==="/api/search"){
+const keyword=(u.searchParams.get("keyword")||"").trim();
+if(!keyword)
+return json({ok:false,message:"請輸入搜尋關鍵字"},400);
+
+return call(
+env,
+"GET",
+`${API_ROOT}/products/search`,
+new URLSearchParams({
+keyword,
+limit:String(Math.min(Number(u.searchParams.get("limit")||20),20)),
+subId:env.COUPANG_SUB_ID,
+imageSize:"512x512"
+}).toString()
+);
+}
+
+return json({ok:false,message:"Not Found"},404);
+
+}catch(e){
+return json({ok:false,message:e.message||"Worker error"},500);
+}
+}};
+
+async function debug(env){
+const r=await fetch(
+(env.COUPANG_API_BASE||DEFAULT_BASE)+"/",
+{headers:{"X-MARKET":"TW"}}
+);
+
+return json({
+ok:true,
+status:r.status,
+contentType:r.headers.get("content-type")||"",
+body:(await r.text()).slice(0,1000)
+});
+}
+
+async function call(env,method,path,query){
+
+if(!env.COUPANG_ACCESS_KEY||!env.COUPANG_SECRET_KEY)
+return json({
+ok:false,
+message:"Worker 尚未設定酷澎 API 憑證"
+},500);
+
+const d=new Date();
+
+const sd=
+String(d.getUTCFullYear()).slice(2)+
+String(d.getUTCMonth()+1).padStart(2,"0")+
+String(d.getUTCDate()).padStart(2,"0")+"T"+
+String(d.getUTCHours()).padStart(2,"0")+
+String(d.getUTCMinutes()).padStart(2,"0")+
+String(d.getUTCSeconds()).padStart(2,"0")+"Z";
+
+const sig=await hmac(
+env.COUPANG_SECRET_KEY,
+sd+method+path+query
+);
+
+const target=
+(env.COUPANG_API_BASE||DEFAULT_BASE)+
+path+"?"+query;
+
+const r=await fetch(target,{
+headers:{
+Authorization:`CEA algorithm=HmacSHA256,access-key=${env.COUPANG_ACCESS_KEY},signed-date=${sd},signature=${sig}`,
+"X-MARKET":"TW",
+"Content-Type":"application/json;charset=UTF-8",
+"User-Agent":"coupang-affiliate-site"
+}
+});
+
+const text=await r.text();
+
+let data;
+
+try{
+data=JSON.parse(text)
+}catch{
+data={raw:text.slice(0,1500)}
+}
+
+if(!r.ok||data.raw)
+return json({
+ok:false,
+status:r.status,
+statusText:r.statusText,
+endpoint:path,
+message:data.rMessage||data.message||"Coupang API request failed",
+coupang:data
+},r.ok?502:r.status);
+
+return json(data,r.status);
+}
+
+async function hmac(secret,msg){
+
+const k=await crypto.subtle.importKey(
+"raw",
+new TextEncoder().encode(secret),
+{name:"HMAC",hash:"SHA-256"},
+false,
+["sign"]
+);
+
+const s=await crypto.subtle.sign(
+"HMAC",
+k,
+new TextEncoder().encode(msg)
+);
+
+return[...new Uint8Array(s)]
+.map(b=>b.toString(16).padStart(2,"0"))
+.join("");
+}
+
+function cors(){
+return{
+"Access-Control-Allow-Origin":"*",
+"Access-Control-Allow-Methods":"GET,OPTIONS",
+"Access-Control-Allow-Headers":"Content-Type,Authorization"
+};
+}
+
+function json(d,s=200){
+return new Response(
+JSON.stringify(d),
+{
+status:s,
+headers:{
+"Content-Type":"application/json;charset=UTF-8",
+...cors()
+}
+}
+);
+}
