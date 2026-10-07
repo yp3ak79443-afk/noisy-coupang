@@ -157,10 +157,13 @@ export default {
           }, corsHeaders, 200);
         }
 
-        return json({
-          ok: true,
-          data: result.data
-        }, corsHeaders);
+      return json({
+       ok: true,
+       data: result.data,
+       raw: result.data ? null : result.body,
+       status: result.status,
+       contentType: result.contentType
+       }, corsHeaders);
       }
 
       // =========================
