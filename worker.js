@@ -101,8 +101,8 @@ export default {
       }
 
       // ===============================
-// Coupang 熱門活動
-// ===============================
+      // Coupang 熱門活動
+      // ===============================
 if (url.pathname === "/api/events") {
   const limit = Math.min(
     Math.max(
