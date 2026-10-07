@@ -29,6 +29,10 @@ input {
   font-family: inherit;
 }
 
+img {
+  max-width: 100%;
+}
+
 .wrap {
   width: min(1120px, calc(100% - 28px));
   margin: auto;
@@ -40,12 +44,11 @@ input {
 ========================= */
 
 .topbar {
-  background: rgba(255, 255, 255, .96);
+  background: rgba(255, 255, 255, .97);
   border-bottom: 1px solid #eee;
 
   position: sticky;
   top: 0;
-
   z-index: 20;
 
   backdrop-filter: blur(12px);
@@ -71,7 +74,6 @@ input {
   color: #ff5a00;
 
   font-size: 12px;
-
   margin-left: 5px;
 
   letter-spacing: 1px;
@@ -79,14 +81,13 @@ input {
 
 .line-btn {
   background: #06c755;
-
   color: #fff;
 
   text-decoration: none;
 
   font-weight: 800;
 
-  padding: 9px 14px;
+  padding: 9px 15px;
 
   border-radius: 999px;
 
@@ -118,7 +119,7 @@ input {
       #ffedd5
     );
 
-  padding: 48px 0 30px;
+  padding: 48px 0 32px;
 
   border-bottom: 1px solid #fed7aa;
 }
@@ -215,7 +216,7 @@ input {
 
   color: #fff;
 
-  padding: 0 24px;
+  padding: 0 25px;
 
   font-weight: 900;
 
@@ -345,7 +346,7 @@ input {
 ========================= */
 
 .section {
-  padding: 30px 0 4px;
+  padding: 32px 0 4px;
 }
 
 .section-head {
@@ -355,7 +356,7 @@ input {
 
   justify-content: space-between;
 
-  margin-bottom: 15px;
+  margin-bottom: 16px;
 }
 
 .section-head h2 {
@@ -369,9 +370,11 @@ input {
 
   background: #fff;
 
+  color: #2563eb;
+
   border-radius: 10px;
 
-  padding: 8px 12px;
+  padding: 8px 13px;
 
   cursor: pointer;
 
@@ -393,9 +396,9 @@ input {
   display: grid;
 
   grid-template-columns:
-    repeat(4, 1fr);
+    repeat(4, minmax(0, 1fr));
 
-  gap: 15px;
+  gap: 16px;
 }
 
 
@@ -408,12 +411,12 @@ input {
 
   border: 1px solid #eee;
 
-  border-radius: 15px;
+  border-radius: 16px;
 
   overflow: hidden;
 
   box-shadow:
-    0 4px 16px #00000008;
+    0 4px 16px rgba(0, 0, 0, .04);
 
   display: flex;
 
@@ -428,12 +431,12 @@ input {
 }
 
 .card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 
   border-color: #fed7aa;
 
   box-shadow:
-    0 12px 28px #00000012;
+    0 14px 32px rgba(0, 0, 0, .09);
 }
 
 
@@ -442,7 +445,7 @@ input {
 ========================= */
 
 .pic {
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
 
   background: #fff;
 
@@ -453,6 +456,8 @@ input {
   justify-content: center;
 
   overflow: hidden;
+
+  border-bottom: 1px solid #f3f3f3;
 }
 
 .pic img {
@@ -462,11 +467,13 @@ input {
 
   object-fit: contain;
 
+  padding: 8px;
+
   transition: transform .25s;
 }
 
 .card:hover .pic img {
-  transform: scale(1.03);
+  transform: scale(1.04);
 }
 
 .no-image {
@@ -481,7 +488,7 @@ input {
 ========================= */
 
 .body {
-  padding: 12px;
+  padding: 13px;
 
   display: flex;
 
@@ -504,20 +511,26 @@ input {
 
   overflow: hidden;
 
-  margin-bottom: 9px;
+  margin-bottom: 8px;
 
-  font-weight: 600;
+  font-weight: 700;
+
+  color: #222;
 }
 
 
 /* 價格 */
 
 .price {
-  font-size: 21px;
+  font-size: 22px;
+
+  line-height: 1.2;
 
   font-weight: 900;
 
   color: #e54810;
+
+  margin-top: 2px;
 }
 
 
@@ -526,36 +539,11 @@ input {
 .first-price {
   color: #16a34a;
 
-  font-size: 13px;
+  font-size: 12px;
 
   font-weight: 800;
 
-  margin-top: 4px;
-}
-
-
-/* 省多少 */
-
-.save {
-  display: inline-flex;
-
-  align-items: center;
-
-  width: fit-content;
-
   margin-top: 5px;
-
-  padding: 3px 7px;
-
-  border-radius: 6px;
-
-  background: #dcfce7;
-
-  color: #15803d;
-
-  font-size: 11px;
-
-  font-weight: 900;
 }
 
 
@@ -570,25 +558,33 @@ input {
 
   flex-wrap: wrap;
 
+  min-height: 25px;
+
   margin: 8px 0;
 }
 
 .tag {
   font-size: 11px;
 
+  line-height: 1;
+
   border-radius: 999px;
 
-  padding: 3px 7px;
+  padding: 5px 8px;
 
   background: #f3f4f6;
 
   color: #555;
+
+  font-weight: 700;
 }
 
 .tag.rocket {
-  background: #fff7ed;
+  background: #fff1e8;
 
   color: #ea580c;
+
+  border: 1px solid #fed7aa;
 }
 
 .tag.rating {
@@ -636,6 +632,8 @@ input {
 .buy {
   display: block;
 
+  width: 100%;
+
   text-align: center;
 
   text-decoration: none;
@@ -646,19 +644,25 @@ input {
 
   font-weight: 900;
 
-  padding: 10px;
+  padding: 11px 10px;
 
   border-radius: 10px;
 
   margin-top: auto;
 
-  transition: .2s;
+  transition:
+    background .2s,
+    transform .2s,
+    box-shadow .2s;
 }
 
 .buy:hover {
   background: #ea580c;
 
   transform: translateY(-1px);
+
+  box-shadow:
+    0 6px 15px rgba(234, 88, 12, .22);
 }
 
 .buy:active {
@@ -773,7 +777,7 @@ input {
 
 
 /* =========================
-   SEO 內容
+   SEO
 ========================= */
 
 .seo-section {
@@ -848,7 +852,9 @@ footer {
 
   .grid {
     grid-template-columns:
-      repeat(3, 1fr);
+      repeat(3, minmax(0, 1fr));
+
+    gap: 13px;
   }
 
 }
@@ -861,27 +867,20 @@ footer {
 @media (max-width: 600px) {
 
   .wrap {
-    width: min(
-      100% - 20px,
-      1120px
-    );
+    width: calc(100% - 20px);
   }
-
 
   .nav {
     height: 56px;
   }
 
-
   .logo {
     font-size: 18px;
   }
 
-
   .logo span {
     font-size: 10px;
   }
-
 
   .line-btn {
     font-size: 12px;
@@ -889,51 +888,28 @@ footer {
     padding: 8px 11px;
   }
 
-
   .hero {
     padding: 32px 0 25px;
   }
 
-
   .hero h1 {
     font-size: 34px;
-  }
 
+    letter-spacing: -.7px;
+  }
 
   .hero-text {
     font-size: 14px;
 
     margin-top: 13px;
-  }
 
+    line-height: 1.75;
+  }
 
   .search {
     border-radius: 13px;
+
+    padding: 4px;
   }
 
-
-  .search input {
-    font-size: 15px;
-
-    padding: 11px 9px;
-  }
-
-
-  .search button {
-    padding: 0 16px;
-
-    font-size: 14px;
-  }
-
-
-  .quick {
-    gap: 6px;
-
-    font-size: 12px;
-  }
-
-
-  .quick button {
-    padding: 5px 9px;
-
-    font-s
+  .search inpu
