@@ -159,7 +159,7 @@ return json({
   data,
   raw: data ? null : responseText
 }, corsHeaders);
-
+}
       // =========================
       // Not Found
       // =========================
