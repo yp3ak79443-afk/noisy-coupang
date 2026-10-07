@@ -5,7 +5,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // CORS
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
@@ -21,10 +20,8 @@ export default {
     }
 
     try {
-      // =========================
-      // 基本設定
-      // =========================
-      const baseUrl = env.COUPANG_API_BASE || DEFAULT_BASE;
+      const baseUrl =
+        env.COUPANG_API_BASE || DEFAULT_BASE;
 
       // =========================
       // Health
@@ -46,21 +43,28 @@ export default {
 
         try {
           const ipResponse = env.EGRESS
-            ? await env.EGRESS.fetch("https://api.ipify.org?format=json")
-            : await fetch("https://api.ipify.org?format=json");
+            ? await env.EGRESS.fetch(
+                "https://api.ipify.org?format=json"
+              )
+            : await fetch(
+                "https://api.ipify.org?format=json"
+              );
 
           publicIp = await ipResponse.text();
         } catch (e) {
           publicIp = "IP check failed";
         }
 
-        const response = await fetch(baseUrl + "/", {
-          method: "GET",
-          headers: {
-            "X-MARKET": "TW",
-            "User-Agent": "mama-coupang-api/1.0"
+        const response = await fetch(
+          baseUrl + "/",
+          {
+            method: "GET",
+            headers: {
+              "X-MARKET": "TW",
+              "User-Agent": "mama-coupang-api/1.0"
+            }
           }
-        });
+        );
 
         const body = await response.text();
 
@@ -69,11 +73,15 @@ export default {
           gateway: baseUrl,
           gatewayStatus: response.status,
           gatewayStatusText: response.statusText,
-          contentType: response.headers.get("content-type") || "",
+          contentType:
+            response.headers.get("content-type") || "",
           publicIp,
-          hasAccessKey: !!env.COUPANG_ACCESS_KEY,
-          hasSecretKey: !!env.COUPANG_SECRET_KEY,
-          hasSubId: !!env.COUPANG_SUB_ID,
+          hasAccessKey:
+            !!env.COUPANG_ACCESS_KEY,
+          hasSecretKey:
+            !!env.COUPANG_SECRET_KEY,
+          hasSubId:
+            !!env.COUPANG_SUB_ID,
           market: "TW",
           body: body.slice(0, 3000)
         }, corsHeaders);
@@ -83,18 +91,29 @@ export default {
       // Reco API 測試
       // =========================
       if (url.pathname === "/api/reco-test") {
-        const result = await callRecoAPI(env, baseUrl);
+        const result =
+          await callRecoAPI(env, baseUrl);
 
-        return json(result, corsHeaders);
+        return json(
+          result,
+          corsHeaders
+        );
       }
 
       // =========================
       // 商品搜尋
       // =========================
       if (url.pathname === "/api/search") {
-        const keyword = url.searchParams.get("keyword") || "";
+        const keyword =
+          url.searchParams.get("keyword") || "";
+
         const limit = Math.min(
-          Math.max(Number(url.searchParams.get("limit") || 10), 1),
+          Math.max(
+            Number(
+              url.searchParams.get("limit") || 10
+            ),
+            1
+          ),
           20
         );
 
@@ -108,20 +127,24 @@ export default {
         const path =
           `${API_ROOT}/products/search`;
 
+        // 正確的 Query String
         const query =
           keyword=${encodeURIComponent(keyword)} +
           &limit=${limit} +
-          &subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")} +
+          `&subId=${encodeURIComponent(
+            env.COUPANG_SUB_ID || ""
+          )}` +
           `&imageSize=512x512`;
 
-        const result = await callCoupang(
-          env,
-          baseUrl,
-          "GET",
-          path,
-          query,
-          null
-        );
+        const result =
+          await callCoupang(
+            env,
+            baseUrl,
+            "GET",
+            path,
+            query,
+            null
+          );
 
         if (!result.ok) {
           return json({
@@ -130,7 +153,8 @@ export default {
             statusText: result.statusText,
             endpoint: path,
             contentType: result.contentType,
-            message: "Coupang API request failed",
+            message:
+              "Coupang API request failed",
             raw: result.body
           }, corsHeaders, 200);
         }
@@ -141,6 +165,9 @@ export default {
         }, corsHeaders);
       }
 
+      // =========================
+      // Not Found
+      // =========================
       return json({
         ok: false,
         message: "Not Found"
@@ -161,70 +188,108 @@ export default {
 // Reco API
 // ======================================================
 
-async function callRecoAPI(env, baseUrl) {
-
+async function callRecoAPI(
+  env,
+  baseUrl
+) {
   const path =
     `${API_ROOT}/v2/products/reco`;
 
-  // 取得目前出口 IP
   let publicIp = "";
 
   try {
     const ipResponse = env.EGRESS
-      ? await env.EGRESS.fetch("https://api.ipify.org?format=json")
-      : await fetch("https://api.ipify.org?format=json");
+      ? await env.EGRESS.fetch(
+          "https://api.ipify.org?format=json"
+        )
+      : await fetch(
+          "https://api.ipify.org?format=json"
+        );
 
-    const ipJson = await ipResponse.json();
-    publicIp = ipJson.ip || "";
+    const ipJson =
+      await ipResponse.json();
+
+    publicIp =
+      ipJson.ip || "";
+
   } catch (e) {
     publicIp = "";
   }
 
-  // 官方 Reco API Body
   const body = {
     site: {
-      domain: "https://yp3ak79443-afk.github.io/noisy-coupang/",
-      id: "noisy-coupang"
+      domain:
+        "https://yp3ak79443-afk.github.io/noisy-coupang/",
+      id:
+        "noisy-coupang"
     },
 
     device: {
-      id: "mama-coupang-test",
-      ip: publicIp,
-      lmt: 1,
-      ua: "Mozilla/5.0"
+      id:
+        "mama-coupang-test",
+      ip:
+        publicIp,
+      lmt:
+        1,
+      ua:
+        "Mozilla/5.0"
     },
 
     imp: {
-      adType: 1,
-      imageSize: "512x512",
-      placementId: "noisy-coupang-home",
-      pos: 1
+      adType:
+        1,
+      imageSize:
+        "512x512",
+      placementId:
+        "noisy-coupang-home",
+      pos:
+        1
     },
 
     affiliate: {
-      subId: env.COUPANG_SUB_ID || "Kai",
-      subParam: "reco-test"
+      subId:
+        env.COUPANG_SUB_ID || "Kai",
+      subParam:
+        "reco-test"
     }
   };
 
-  const result = await callCoupang(
-    env,
-    baseUrl,
-    "POST",
-    path,
-    "",
-    body
-  );
+  const result =
+    await callCoupang(
+      env,
+      baseUrl,
+      "POST",
+      path,
+      "",
+      body
+    );
 
   return {
-    ok: result.ok,
-    status: result.status,
-    statusText: result.statusText,
-    endpoint: path,
-    contentType: result.contentType,
-    requestBody: body,
-    data: result.data || null,
-    raw: result.data ? null : result.body
+    ok:
+      result.ok,
+
+    status:
+      result.status,
+
+    statusText:
+      result.statusText,
+
+    endpoint:
+      path,
+
+    contentType:
+      result.contentType,
+
+    requestBody:
+      body,
+
+    data:
+      result.data || null,
+
+    raw:
+      result.data
+        ? null
+        : result.body
   };
 }
 
@@ -241,7 +306,8 @@ async function callCoupang(
   query,
   body
 ) {
-  const signedDate = getSignedDate();
+  const signedDate =
+    getSignedDate();
 
   const message =
     signedDate +
@@ -249,24 +315,33 @@ async function callCoupang(
     path +
     query;
 
-  const signature = await makeHmacSignature(
-    env.COUPANG_SECRET_KEY,
-    message
-  );
+  const signature =
+    await makeHmacSignature(
+      env.COUPANG_SECRET_KEY,
+      message
+    );
 
   const authorization =
     `CEA algorithm=HmacSHA256,access-key=${env.COUPANG_ACCESS_KEY},signed-date=${signedDate},signature=${signature}`;
 
+  // 正確組合 URL
   const target =
     baseUrl +
     path +
     (query ? ?${query} : "");
 
   const headers = {
-    "Authorization": authorization,
-    "X-MARKET": "TW",
-    "Content-Type": "application/json;charset=UTF-8",
-    "User-Agent": "mama-coupang-api/1.0"
+    "Authorization":
+      authorization,
+
+    "X-MARKET":
+      "TW",
+
+    "Content-Type":
+      "application/json;charset=UTF-8",
+
+    "User-Agent":
+      "mama-coupang-api/1.0"
   };
 
   const options = {
@@ -274,16 +349,29 @@ async function callCoupang(
     headers
   };
 
-  if (body !== null && body !== undefined) {
-    options.body = JSON.stringify(body);
+  if (
+    body !== null &&
+    body !== undefined
+  ) {
+    options.body =
+      JSON.stringify(body);
   }
 
-  const response = env.EGRESS
-    ? await env.EGRESS.fetch(target, options)
-    : await fetch(target, options);
+  const response =
+    env.EGRESS
+      ? await env.EGRESS.fetch(
+          target,
+          options
+        )
+      : await fetch(
+          target,
+          options
+        );
 
   const contentType =
-    response.headers.get("content-type") || "";
+    response.headers.get(
+      "content-type"
+    ) || "";
 
   const responseText =
     await response.text();
@@ -291,18 +379,31 @@ async function callCoupang(
   let data = null;
 
   try {
-    data = JSON.parse(responseText);
+    data =
+      JSON.parse(responseText);
   } catch (e) {
     data = null;
   }
 
   return {
-    ok: response.ok,
-    status: response.status,
-    statusText: response.statusText,
+    ok:
+      response.ok,
+
+    status:
+      response.status,
+
+    statusText:
+      response.statusText,
+
     contentType,
+
     data,
-    body: responseText.slice(0, 10000)
+
+    body:
+      responseText.slice(
+        0,
+        10000
+      )
   };
 }
 
@@ -311,29 +412,48 @@ async function callCoupang(
 // HMAC-SHA256
 // ======================================================
 
-async function makeHmacSignature(secretKey, message) {
+async function makeHmacSignature(
+  secretKey,
+  message
+) {
+  const encoder =
+    new TextEncoder();
 
-  const encoder = new TextEncoder();
+  const key =
+    await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(
+        secretKey
+      ),
+      {
+        name:
+          "HMAC",
+        hash:
+          "SHA-256"
+      },
+      false,
+      ["sign"]
+    );
 
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secretKey),
-    {
-      name: "HMAC",
-      hash: "SHA-256"
-    },
-    false,
-    ["sign"]
-  );
+  const signature =
+    await crypto.subtle.sign(
+      "HMAC",
+      key,
+      encoder.encode(
+        message
+      )
+    );
 
-  const signature = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    encoder.encode(message)
-  );
-
-  return [...new Uint8Array(signature)]
-    .map(b => b.toString(16).padStart(2, "0"))
+  return [
+    ...new Uint8Array(
+      signature
+    )
+  ]
+    .map(
+      b =>
+        b.toString(16)
+          .padStart(2, "0")
+    )
     .join("");
 }
 
@@ -343,28 +463,40 @@ async function makeHmacSignature(secretKey, message) {
 // ======================================================
 
 function getSignedDate() {
-
-  const now = new Date();
+  const now =
+    new Date();
 
   const yyyy =
     now.getUTCFullYear();
 
   const MM =
-    String(now.getUTCMonth() + 1).padStart(2, "0");
+    String(
+      now.getUTCMonth() + 1
+    ).padStart(2, "0");
 
   const dd =
-    String(now.getUTCDate()).padStart(2, "0");
+    String(
+      now.getUTCDate()
+    ).padStart(2, "0");
 
   const HH =
-    String(now.getUTCHours()).padStart(2, "0");
+    String(
+      now.getUTCHours()
+    ).padStart(2, "0");
 
   const mm =
-    String(now.getUTCMinutes()).padStart(2, "0");
+    String(
+      now.getUTCMinutes()
+    ).padStart(2, "0");
 
   const ss =
-    String(now.getUTCSeconds()).padStart(2, "0");
+    String(
+      now.getUTCSeconds()
+    ).padStart(2, "0");
 
-  return `${yyyy}${MM}${dd}T${HH}${mm}${ss}Z`;
+  return (
+    ${yyyy}${MM}${dd}T${HH}${mm}${ss}Z
+  );
 }
 
 
@@ -372,10 +504,17 @@ function getSignedDate() {
 // JSON Response
 // ======================================================
 
-function json(data, headers, status = 200) {
-
+function json(
+  data,
+  headers,
+  status = 200
+) {
   return new Response(
-    JSON.stringify(data, null, 2),
+    JSON.stringify(
+      data,
+      null,
+      2
+    ),
     {
       status,
       headers
