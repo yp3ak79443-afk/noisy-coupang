@@ -114,9 +114,14 @@ if (url.pathname === "/api/events") {
 
   const path = `${API_ROOT}/v1/events`;
 
-  const query =
-    `limit=${limit} `+
-    `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}`;
+  const subId =
+  url.searchParams.get("subId") ||
+  env.COUPANG_SUB_ID ||
+  "Kai";
+
+const query =
+  `limit=${limit}` +
+  `&subId=${encodeURIComponent(subId)}`
 
   const result = await callCoupang(
     env,
