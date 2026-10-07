@@ -866,6 +866,12 @@ footer {
 
 @media (max-width: 600px) {
 
+  .grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  }
+  
   .wrap {
     width: calc(100% - 20px);
   }
