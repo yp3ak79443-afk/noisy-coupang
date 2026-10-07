@@ -125,7 +125,7 @@ export default {
         }
 
         const path =
-          `${API_ROOT}/products/search`;
+          `${API_ROOT}/v1/products/search`;
 
         // 正確的 Query String
         const query =
