@@ -250,8 +250,8 @@ async function search() {
   try {
 
     const apiUrl =
-      ${API_BASE}/api/search +
-      ?keyword=${encodeURIComponent(q)} +
+      `${API_BASE}/api/search` +
+      `?keyword=${encodeURIComponent(q)}` +
       `&limit=10`;
 
 
