@@ -497,8 +497,8 @@ async function search() {
 
 
     const apiUrl =
-      ${API_BASE}/api/search +
-      ?keyword=${encodeURIComponent(q)} +
+      `${API_BASE}/api/search` +
+      `?keyword=${encodeURIComponent(q)}` +
       `&limit=10`;
 
 
@@ -523,7 +523,7 @@ async function search() {
     catch {
 
       throw new Error(
-        API 回傳格式錯誤（HTTP ${r.status}）
+        `API 回傳格式錯誤（HTTP ${r.status}）`
       );
 
     }
@@ -563,7 +563,7 @@ async function search() {
     $("status").textContent =
       items.length
 
-        ? 找到 ${items.length} 筆商品
+        ? `找到 ${items.length} 筆商品`
 
         : "沒有找到符合條件的商品";
 
