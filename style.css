@@ -1,1 +1,939 @@
-*{box-sizing:border-box}:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;color:#222;background:#f7f7f7}body{margin:0;background:#f7f7f7}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}.topbar{background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:20}.nav{height:62px;display:flex;align-items:center;justify-content:space-between}.logo{font-size:21px;font-weight:900;color:#222;text-decoration:none}.logo span{color:#ff5a00;font-size:12px;margin-left:5px;letter-spacing:1px}.line-btn{background:#06c755;color:#fff;text-decoration:none;font-weight:800;padding:9px 14px;border-radius:999px;font-size:14px}.hero{background:linear-gradient(135deg,#fff7ed,#ffedd5);padding:48px 0 30px;border-bottom:1px solid #fed7aa}.eyebrow{font-size:12px;font-weight:900;letter-spacing:1.4px;color:#ea580c;margin:0 0 8px}.hero h1{font-size:clamp(32px,6vw,56px);line-height:1.08;margin:0;letter-spacing:-1px}.hero h1 strong{color:#ea580c}.hero-text{color:#666;max-width:680px;line-height:1.7;margin:15px 0 22px}.search{display:flex;max-width:760px;background:#fff;border:1px solid #fed7aa;border-radius:15px;padding:5px;box-shadow:0 8px 30px #ea580c18}.search input{flex:1;min-width:0;border:0;outline:0;padding:12px 13px;font-size:16px;background:transparent}.search button{border:0;border-radius:11px;background:#f97316;color:#fff;padding:0 24px;font-weight:900;font-size:15px;cursor:pointer}.search button:disabled{opacity:.65}.quick{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;font-size:13px;color:#777}.quick button{border:1px solid #f5c49e;background:#fff7ed;color:#c2410c;border-radius:999px;padding:6px 11px;cursor:pointer}.status{min-height:20px;color:#777;font-size:13px;margin:10px 0 0}.section{padding:30px 0 4px}.section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:15px}.section-head h2{margin:0;font-size:25px}.ghost{border:1px solid #ddd;background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.card{background:#fff;border:1px solid #eee;border-radius:15px;overflow:hidden;box-shadow:0 4px 16px #00000008;display:flex;flex-direction:column}.pic{aspect-ratio:1;background:#fff;display:flex;align-items:center;justify-content:center}.pic img{width:100%;height:100%;object-fit:contain}.body{padding:12px;display:flex;flex-direction:column;flex:1}.name{font-size:15px;line-height:1.45;min-height:44px;max-height:44px;overflow:hidden;margin-bottom:9px}.price{font-size:21px;font-weight:900;color:#e54810}.meta{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}.tag{font-size:11px;border-radius:999px;padding:3px 7px;background:#f3f4f6;color:#555}.tag.rocket{background:#fff7ed;color:#ea580c}.buy{display:block;text-align:center;text-decoration:none;background:#f97316;color:#fff;font-weight:900;padding:10px;border-radius:10px;margin-top:auto}.empty{grid-column:1/-1;background:#fff;border:1px dashed #ddd;border-radius:15px;padding:38px;text-align:center;color:#888}.notice{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid #eee;border-radius:15px;padding:16px;color:#666}.notice strong{color:#222}footer{margin-top:45px;padding:25px 0;background:#222;color:#aaa;font-size:12px}@media(max-width:850px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.nav{height:56px}.logo{font-size:18px}.hero{padding:32px 0 25px}.grid{grid-template-columns:repeat(2,1fr);gap:10px}.section-head h2{font-size:21px}.name{font-size:14px}.price{font-size:19px}.buy{font-size:13px}.notice{display:block}}
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Noto Sans TC",
+    "Microsoft JhengHei",
+    sans-serif;
+
+  color: #222;
+  background: #f7f7f7;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #f7f7f7;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+.wrap {
+  width: min(1120px, calc(100% - 28px));
+  margin: auto;
+}
+
+
+/* =========================
+   頂部導覽
+========================= */
+
+.topbar {
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid #eee;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 20;
+
+  backdrop-filter: blur(12px);
+}
+
+.nav {
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 900;
+
+  color: #222;
+  text-decoration: none;
+}
+
+.logo span {
+  color: #ff5a00;
+
+  font-size: 12px;
+
+  margin-left: 5px;
+
+  letter-spacing: 1px;
+}
+
+.line-btn {
+  background: #06c755;
+
+  color: #fff;
+
+  text-decoration: none;
+
+  font-weight: 800;
+
+  padding: 9px 14px;
+
+  border-radius: 999px;
+
+  font-size: 14px;
+
+  transition: .2s;
+}
+
+.line-btn:hover {
+  transform: translateY(-1px);
+  opacity: .9;
+}
+
+
+/* =========================
+   Hero
+========================= */
+
+.hero {
+  background:
+    radial-gradient(
+      circle at 85% 20%,
+      #fed7aa 0,
+      transparent 28%
+    ),
+    linear-gradient(
+      135deg,
+      #fff7ed,
+      #ffedd5
+    );
+
+  padding: 48px 0 30px;
+
+  border-bottom: 1px solid #fed7aa;
+}
+
+.eyebrow {
+  font-size: 12px;
+
+  font-weight: 900;
+
+  letter-spacing: 1.4px;
+
+  color: #ea580c;
+
+  margin: 0 0 8px;
+}
+
+.hero h1 {
+  font-size: clamp(32px, 6vw, 56px);
+
+  line-height: 1.08;
+
+  margin: 0;
+
+  letter-spacing: -1px;
+}
+
+.hero h1 strong {
+  color: #ea580c;
+}
+
+.hero-text {
+  color: #666;
+
+  max-width: 680px;
+
+  line-height: 1.7;
+
+  margin: 15px 0 22px;
+}
+
+
+/* =========================
+   搜尋
+========================= */
+
+.search {
+  display: flex;
+
+  max-width: 760px;
+
+  background: #fff;
+
+  border: 1px solid #fed7aa;
+
+  border-radius: 15px;
+
+  padding: 5px;
+
+  box-shadow:
+    0 8px 30px #ea580c18;
+
+  transition: .2s;
+}
+
+.search:focus-within {
+  border-color: #f97316;
+
+  box-shadow:
+    0 8px 35px #ea580c25;
+}
+
+.search input {
+  flex: 1;
+
+  min-width: 0;
+
+  border: 0;
+
+  outline: 0;
+
+  padding: 12px 13px;
+
+  font-size: 16px;
+
+  background: transparent;
+}
+
+.search button {
+  border: 0;
+
+  border-radius: 11px;
+
+  background: #f97316;
+
+  color: #fff;
+
+  padding: 0 24px;
+
+  font-weight: 900;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.search button:hover {
+  background: #ea580c;
+
+  transform: translateY(-1px);
+}
+
+.search button:disabled {
+  opacity: .65;
+
+  cursor: wait;
+
+  transform: none;
+}
+
+
+/* =========================
+   熱門搜尋
+========================= */
+
+.quick {
+  display: flex;
+
+  gap: 8px;
+
+  align-items: center;
+
+  flex-wrap: wrap;
+
+  margin-top: 12px;
+
+  font-size: 13px;
+
+  color: #777;
+}
+
+.quick button {
+  border: 1px solid #f5c49e;
+
+  background: #fff7ed;
+
+  color: #c2410c;
+
+  border-radius: 999px;
+
+  padding: 6px 11px;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.quick button:hover {
+  background: #f97316;
+
+  color: #fff;
+
+  border-color: #f97316;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   狀態
+========================= */
+
+.status {
+  min-height: 20px;
+
+  color: #777;
+
+  font-size: 13px;
+
+  margin: 10px 0 0;
+}
+
+
+/* =========================
+   合作夥伴揭露
+========================= */
+
+.disclosure-section {
+  padding-top: 18px;
+}
+
+.affiliate-disclosure {
+  background: #fffaf5;
+
+  border: 1px solid #fed7aa;
+
+  border-radius: 14px;
+
+  padding: 14px 16px;
+
+  color: #666;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+.affiliate-disclosure strong {
+  display: block;
+
+  color: #c2410c;
+
+  margin-bottom: 3px;
+}
+
+.affiliate-disclosure p {
+  margin: 0;
+}
+
+
+/* =========================
+   區塊
+========================= */
+
+.section {
+  padding: 30px 0 4px;
+}
+
+.section-head {
+  display: flex;
+
+  align-items: end;
+
+  justify-content: space-between;
+
+  margin-bottom: 15px;
+}
+
+.section-head h2 {
+  margin: 0;
+
+  font-size: 25px;
+}
+
+.ghost {
+  border: 1px solid #ddd;
+
+  background: #fff;
+
+  border-radius: 10px;
+
+  padding: 8px 12px;
+
+  cursor: pointer;
+
+  transition: .2s;
+}
+
+.ghost:hover {
+  border-color: #bbb;
+
+  background: #f9fafb;
+}
+
+
+/* =========================
+   商品 Grid
+========================= */
+
+.grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 15px;
+}
+
+
+/* =========================
+   商品卡
+========================= */
+
+.card {
+  background: #fff;
+
+  border: 1px solid #eee;
+
+  border-radius: 15px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 4px 16px #00000008;
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+
+  transition:
+    transform .2s,
+    box-shadow .2s,
+    border-color .2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+
+  border-color: #fed7aa;
+
+  box-shadow:
+    0 12px 28px #00000012;
+}
+
+
+/* =========================
+   商品圖片
+========================= */
+
+.pic {
+  aspect-ratio: 1;
+
+  background: #fff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+}
+
+.pic img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: contain;
+
+  transition: transform .25s;
+}
+
+.card:hover .pic img {
+  transform: scale(1.03);
+}
+
+.no-image {
+  color: #aaa;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   商品內容
+========================= */
+
+.body {
+  padding: 12px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  flex: 1;
+}
+
+
+/* 商品名稱 */
+
+.name {
+  font-size: 15px;
+
+  line-height: 1.45;
+
+  min-height: 44px;
+
+  max-height: 44px;
+
+  overflow: hidden;
+
+  margin-bottom: 9px;
+
+  font-weight: 600;
+}
+
+
+/* 價格 */
+
+.price {
+  font-size: 21px;
+
+  font-weight: 900;
+
+  color: #e54810;
+}
+
+
+/* 首購價格 */
+
+.first-price {
+  color: #16a34a;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  margin-top: 4px;
+}
+
+
+/* 省多少 */
+
+.save {
+  display: inline-flex;
+
+  align-items: center;
+
+  width: fit-content;
+
+  margin-top: 5px;
+
+  padding: 3px 7px;
+
+  border-radius: 6px;
+
+  background: #dcfce7;
+
+  color: #15803d;
+
+  font-size: 11px;
+
+  font-weight: 900;
+}
+
+
+/* =========================
+   商品標籤
+========================= */
+
+.meta {
+  display: flex;
+
+  gap: 6px;
+
+  flex-wrap: wrap;
+
+  margin: 8px 0;
+}
+
+.tag {
+  font-size: 11px;
+
+  border-radius: 999px;
+
+  padding: 3px 7px;
+
+  background: #f3f4f6;
+
+  color: #555;
+}
+
+.tag.rocket {
+  background: #fff7ed;
+
+  color: #ea580c;
+}
+
+.tag.rating {
+  background: #fffbeb;
+
+  color: #b45309;
+}
+
+.tag.reviews {
+  background: #f3f4f6;
+
+  color: #555;
+}
+
+
+/* =========================
+   分潤標籤
+========================= */
+
+.affiliate-badge {
+  display: block;
+
+  width: fit-content;
+
+  margin: 2px 0 8px;
+
+  padding: 4px 8px;
+
+  border-radius: 7px;
+
+  background: #fff7ed;
+
+  color: #c2410c;
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+
+/* =========================
+   購買按鈕
+========================= */
+
+.buy {
+  display: block;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  background: #f97316;
+
+  color: #fff;
+
+  font-weight: 900;
+
+  padding: 10px;
+
+  border-radius: 10px;
+
+  margin-top: auto;
+
+  transition: .2s;
+}
+
+.buy:hover {
+  background: #ea580c;
+
+  transform: translateY(-1px);
+}
+
+.buy:active {
+  transform: translateY(0);
+}
+
+.buy[disabled] {
+  opacity: .5;
+
+  cursor: not-allowed;
+}
+
+
+/* =========================
+   空白搜尋
+========================= */
+
+.empty {
+  grid-column: 1 / -1;
+
+  background: #fff;
+
+  border: 1px dashed #ddd;
+
+  border-radius: 15px;
+
+  padding: 42px 20px;
+
+  text-align: center;
+
+  color: #888;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+.empty strong {
+  color: #555;
+
+  font-size: 16px;
+}
+
+.empty-icon {
+  font-size: 36px;
+
+  margin-bottom: 4px;
+}
+
+
+/* =========================
+   Notice
+========================= */
+
+.notice {
+  display: flex;
+
+  gap: 12px;
+
+  align-items: center;
+
+  background: #fff;
+
+  border: 1px solid #eee;
+
+  border-radius: 15px;
+
+  padding: 16px;
+
+  color: #666;
+}
+
+.notice strong {
+  display: block;
+
+  color: #222;
+
+  margin-bottom: 3px;
+}
+
+.notice span {
+  display: block;
+
+  line-height: 1.6;
+
+  font-size: 13px;
+}
+
+.notice-icon {
+  width: 42px;
+
+  height: 42px;
+
+  flex: 0 0 42px;
+
+  border-radius: 12px;
+
+  background: #fff7ed;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+
+/* =========================
+   SEO 內容
+========================= */
+
+.seo-section {
+  padding-top: 40px;
+
+  padding-bottom: 10px;
+}
+
+.seo-section h2 {
+  margin: 0 0 10px;
+
+  font-size: 24px;
+}
+
+.seo-section p:not(.eyebrow) {
+  color: #666;
+
+  font-size: 14px;
+
+  line-height: 1.8;
+
+  max-width: 850px;
+}
+
+
+/* =========================
+   Footer
+========================= */
+
+footer {
+  margin-top: 45px;
+
+  padding: 28px 0;
+
+  background: #222;
+
+  color: #aaa;
+
+  font-size: 12px;
+
+  line-height: 1.8;
+}
+
+.footer-main {
+  color: #fff;
+
+  font-size: 15px;
+
+  font-weight: 900;
+
+  margin-bottom: 4px;
+}
+
+.footer-text {
+  color: #aaa;
+}
+
+.footer-disclosure {
+  color: #888;
+
+  margin-top: 8px;
+
+  max-width: 800px;
+}
+
+
+/* =========================
+   平板
+========================= */
+
+@media (max-width: 850px) {
+
+  .grid {
+    grid-template-columns:
+      repeat(3, 1fr);
+  }
+
+}
+
+
+/* =========================
+   手機
+========================= */
+
+@media (max-width: 600px) {
+
+  .wrap {
+    width: min(
+      100% - 20px,
+      1120px
+    );
+  }
+
+
+  .nav {
+    height: 56px;
+  }
+
+
+  .logo {
+    font-size: 18px;
+  }
+
+
+  .logo span {
+    font-size: 10px;
+  }
+
+
+  .line-btn {
+    font-size: 12px;
+
+    padding: 8px 11px;
+  }
+
+
+  .hero {
+    padding: 32px 0 25px;
+  }
+
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+
+  .hero-text {
+    font-size: 14px;
+
+    margin-top: 13px;
+  }
+
+
+  .search {
+    border-radius: 13px;
+  }
+
+
+  .search input {
+    font-size: 15px;
+
+    padding: 11px 9px;
+  }
+
+
+  .search button {
+    padding: 0 16px;
+
+    font-size: 14px;
+  }
+
+
+  .quick {
+    gap: 6px;
+
+    font-size: 12px;
+  }
+
+
+  .quick button {
+    padding: 5px 9px;
+
+    font-s
