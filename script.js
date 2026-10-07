@@ -17,18 +17,15 @@ const esc = s =>
 ========================= */
 
 function getItems(d) {
-
-  // 直接就是陣列
   if (Array.isArray(d)) {
     return d;
   }
 
-  // 目前酷澎 Worker 實際回傳結構
+  // 自動尋找酷澎 API 回傳的 productData
   if (Array.isArray(d?.data?.data?.data?.productData)) {
     return d.data.data.data.productData;
   }
 
-  // 備用結構
   if (Array.isArray(d?.data?.data?.productData)) {
     return d.data.data.productData;
   }
@@ -41,14 +38,29 @@ function getItems(d) {
     return d.productData;
   }
 
-  if (Array.isArray(d?.data)) {
-    return d.data;
+  // 最後用遞迴方式尋找 productData
+  function findProductData(obj) {
+    if (!obj || typeof obj !== "object") {
+      return null;
+    }
+
+    if (Array.isArray(obj.productData)) {
+      return obj.productData;
+    }
+
+    for (const key of Object.keys(obj)) {
+      const result = findProductData(obj[key]);
+
+      if (Array.isArray(result)) {
+        return result;
+      }
+    }
+
+    return null;
   }
 
-  return [];
+  return findProductData(d) || [];
 }
-
-
 /* =========================
    顯示商品
 ========================= */
