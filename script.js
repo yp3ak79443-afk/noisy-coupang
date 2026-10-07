@@ -533,7 +533,7 @@ async function search() {
 
       throw new Error(
         d?.message ||
-        API 錯誤（HTTP ${r.status}）
+        `API 錯誤（HTTP ${r.status}）`
       );
 
     }
