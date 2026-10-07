@@ -274,7 +274,7 @@ async function search() {
     } catch {
 
       throw new Error(
-        API 回傳格式錯誤（HTTP ${r.status}）
+        `API 回傳格式錯誤（HTTP ${r.status}）`
       );
 
     }
@@ -284,7 +284,7 @@ async function search() {
 
       throw new Error(
         d?.message ||
-        API 錯誤（HTTP ${r.status}）
+        `API 錯誤（HTTP ${r.status}）`
       );
 
     }
