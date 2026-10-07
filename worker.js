@@ -134,37 +134,31 @@ export default {
             `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}` +
             `&imageSize=512x512`;
         
-        const result =
-          await callCoupang(
-            env,
-            baseUrl,
-            "GET",
-            path,
-            query,
-            null
-          );
+const tunnelBase =
+  "https://science-perception-accommodations-buzz.trycloudflare.com";
 
-        if (!result.ok) {
-          return json({
-            ok: false,
-            status: result.status,
-            statusText: result.statusText,
-            endpoint: path,
-            contentType: result.contentType,
-            message:
-              "Coupang API request failed",
-            raw: result.body
-          }, corsHeaders, 200);
-        }
+const response =
+  await fetch(
+    `${tunnelBase}/api/search?${query}`
+  );
 
-      return json({
-       ok: true,
-       data: result.data,
-       raw: result.data ? null : result.body,
-       status: result.status,
-       contentType: result.contentType
-       }, corsHeaders);
-      }
+const responseText =
+  await response.text();
+
+let data = null;
+
+try {
+  data = JSON.parse(responseText);
+} catch (e) {
+  data = null;
+}
+
+return json({
+  ok: response.ok,
+  status: response.status,
+  data,
+  raw: data ? null : responseText
+}, corsHeaders);
 
       // =========================
       // Not Found
