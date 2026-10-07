@@ -678,3 +678,292 @@ document
       };
 
   });
+
+// ==============================
+// 酷澎熱門活動
+// ==============================
+
+const COUPANG_SUB_ID = "Kai";
+
+function getEventItems(d) {
+  return d?.data?.data?.data || [];
+}
+
+function getEventProducts(d) {
+  return d?.data?.data?.data || [];
+}
+
+function formatEventDate(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleDateString("zh-TW", {
+    month: "numeric",
+    day: "numeric"
+  });
+}
+
+function renderEvents(events) {
+  const grid = $("eventsGrid");
+
+  if (!grid) return;
+
+  if (!events.length) {
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">😢</div>
+        <strong>目前沒有熱門活動</strong>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = events.map(event => {
+    const eventId = event.eventId;
+    const name =
+      event.eventName ||
+      event.name ||
+      "酷澎熱門活動";
+
+    const image =
+      event.bannerImageUrl ||
+      event.imageUrl ||
+      event.eventImageUrl ||
+      "";
+
+    const productCount =
+      event.productCount ||
+      event.productsCount ||
+      0;
+
+    const start =
+      formatEventDate(
+        event.startDate ||
+        event.startTime ||
+        event.beginDate
+      );
+
+    const end =
+      formatEventDate(
+        event.endDate ||
+        event.endTime ||
+        event.finishDate
+      );
+
+    return `
+      <article
+        class="event-card"
+        data-event-id="${esc(eventId)}"
+      >
+        ${
+          image
+            ? `
+              <img
+                src="${esc(image)}"
+                alt="${esc(name)}"
+                loading="lazy"
+                onerror="this.style.display='none'"
+              >
+            `
+            : `
+              <div class="event-image-placeholder">
+                🔥
+              </div>
+            `
+        }
+
+        <div class="event-body">
+          <h3>${esc(name)}</h3>
+
+          ${
+            start || end
+              ? `
+                <div class="event-date">
+                  📅 ${esc(start)}
+                  ${start && end ? "～" : ""}
+                  ${esc(end)}
+                </div>
+              `
+              : ""
+          }
+
+          <div class="event-meta">
+            ${
+              productCount
+                ? 🛍️ ${productCount} 件商品
+                : "🛍️ 熱門商品"
+            }
+          </div>
+
+          <button
+            class="event-btn"
+            type="button"
+            data-event-id="${esc(eventId)}"
+          >
+            查看活動商品 →
+          </button>
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  document
+    .querySelectorAll("[data-event-id]")
+    .forEach(el => {
+      el.onclick = () => {
+        const id = el.dataset.eventId;
+
+        if (id) {
+          loadEventProducts(id);
+        }
+      };
+    });
+}
+
+async function loadEvents() {
+  const status = $("eventsStatus");
+  const grid = $("eventsGrid");
+
+  if (!grid) return;
+
+  if (status) {
+    status.textContent = "正在載入酷澎熱門活動…";
+  }
+
+  try {
+    const apiUrl =
+      ${API_BASE}/api/events +
+      ?limit=20 +
+      `&subId=${encodeURIComponent(COUPANG_SUB_ID)}`;
+
+    const r = await fetch(apiUrl);
+    const t = await r.text();
+
+    let d;
+
+    try {
+      d = JSON.parse(t);
+    } catch {
+      throw new Error(
+        活動 API 回傳格式錯誤（HTTP ${r.status}）
+      );
+    }
+
+    if (!r.ok || d?.ok === false) {
+      throw new Error(
+        d?.message ||
+        活動 API 錯誤（HTTP ${r.status}）
+      );
+    }
+
+    const events = getEventItems(d);
+
+    renderEvents(events);
+
+    if (status) {
+      status.textContent =
+        events.length
+          ? 目前有 ${events.length} 個熱門活動
+          : "目前沒有活動";
+    }
+
+  } catch (error) {
+    console.error("loadEvents error:", error);
+
+    grid.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">⚠️</div>
+        <strong>活動載入失敗</strong>
+        <span>${esc(error.message || "請稍後再試")}</span>
+      </div>
+    `;
+
+    if (status) {
+      status.textContent = "活動載入失敗";
+    }
+  }
+}
+
+async function loadEventProducts(eventId) {
+  const status = $("eventsStatus");
+
+  if (status) {
+    status.textContent = "正在載入活動商品…";
+  }
+
+  try {
+    const apiUrl =
+      ${API_BASE}/api/events-products +
+      ?eventId=${encodeURIComponent(eventId)} +
+      &limit=100 +
+      &offset=0 +
+      &subId=${encodeURIComponent(COUPANG_SUB_ID)} +
+      `&imageSize=512x512`;
+
+    const r = await fetch(apiUrl);
+    const t = await r.text();
+
+    let d;
+
+    try {
+      d = JSON.parse(t);
+    } catch {
+      throw new Error(
+        活動商品 API 回傳格式錯誤（HTTP ${r.status}）
+      );
+    }
+
+    if (!r.ok || d?.ok === false) {
+      throw new Error(
+        d?.message ||
+        活動商品 API 錯誤（HTTP ${r.status}）
+      );
+    }
+
+    const items = getEventProducts(d);
+
+    $("resultTitle").textContent = "🔥 活動商品";
+
+    render(items);
+
+    if (status) {
+      status.textContent =
+        items.length
+          ? 找到 ${items.length} 件活動商品
+          : "此活動目前沒有商品";
+    }
+
+    window.scrollTo({
+      top: $("products")?.offsetTop || 0,
+      behavior: "smooth"
+    });
+
+  } catch (error) {
+    console.error(
+      "loadEventProducts error:",
+      error
+    );
+
+    if (status) {
+      status.textContent =
+        error.message || "活動商品載入失敗";
+    }
+  }
+}
+
+const eventsRefreshBtn =
+  $("eventsRefreshBtn");
+
+if (eventsRefreshBtn) {
+  eventsRefreshBtn.onclick = loadEvents;
+}
+
+// 載入熱門活動
+loadEvents();
+
+
+
+
