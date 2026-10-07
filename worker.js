@@ -129,11 +129,11 @@ export default {
 
         // 正確的 Query String
         const query =
-  keyword=${encodeURIComponent(keyword)} +
-  &limit=${limit} +
-  &subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")} +
-  `&imageSize=512x512`;
-
+            `keyword=${encodeURIComponent(keyword)} +
+            `&limit=${limit} +
+            `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")} +
+            `&imageSize=512x512`;
+        
         const result =
           await callCoupang(
             env,
@@ -326,7 +326,7 @@ async function callCoupang(
   const target =
   baseUrl +
   path +
-  (query ? ?${query} : "");
+  (query ? `?${query}` : "");
 
   const headers = {
     "Authorization":
