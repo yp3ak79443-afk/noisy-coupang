@@ -100,6 +100,122 @@ export default {
         );
       }
 
+      // ===============================
+// Coupang 熱門活動
+// ===============================
+if (url.pathname === "/api/events") {
+  const limit = Math.min(
+    Math.max(
+      Number(url.searchParams.get("limit") || 20),
+      1
+    ),
+    100
+  );
+
+  const path = `${API_ROOT}/v1/events`;
+
+  const query =
+    limit=${limit} +
+    `&subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")}`;
+
+  const result = await callCoupang(
+    env,
+    baseUrl,
+    "GET",
+    path,
+    query,
+    null
+  );
+
+  if (!result.ok) {
+    return json({
+      ok: false,
+      status: result.status,
+      statusText: result.statusText,
+      endpoint: path,
+      contentType: result.contentType,
+      message: "Coupang events API request failed",
+      raw: result.body
+    }, corsHeaders, 200);
+  }
+
+  return json({
+    ok: true,
+    data: result.data,
+    raw: result.data ? null : result.body,
+    status: result.status,
+    contentType: result.contentType
+  }, corsHeaders);
+}
+
+
+// ===============================
+// 指定活動商品
+// ===============================
+if (url.pathname === "/api/events-products") {
+  const eventId = url.searchParams.get("eventId");
+
+  const limit = Math.min(
+    Math.max(
+      Number(url.searchParams.get("limit") || 20),
+      1
+    ),
+    100
+  );
+
+  const offset = Math.max(
+    Number(url.searchParams.get("offset") || 0),
+    0
+  );
+
+  if (!eventId) {
+    return json({
+      ok: false,
+      message: "請提供 eventId"
+    }, corsHeaders, 400);
+  }
+
+  const path =
+    `${API_ROOT}/v1/events/${encodeURIComponent(eventId)}/products`;
+
+  const query =
+    limit=${limit} +
+    &offset=${offset} +
+    &subId=${encodeURIComponent(env.COUPANG_SUB_ID || "")} +
+    `&imageSize=512x512`;
+
+  const result = await callCoupang(
+    env,
+    baseUrl,
+    "GET",
+    path,
+    query,
+    null
+  );
+
+  if (!result.ok) {
+    return json({
+      ok: false,
+      status: result.status,
+      statusText: result.statusText,
+      endpoint: path,
+      contentType: result.contentType,
+      message: "Coupang event products API request failed",
+      raw: result.body
+    }, corsHeaders, 200);
+  }
+
+  return json({
+    ok: true,
+    data: result.data,
+    raw: result.data ? null : result.body,
+    status: result.status,
+    contentType: result.contentType
+  }, corsHeaders);
+}
+
+
+      
       // =========================
       // 商品搜尋
       // =========================
