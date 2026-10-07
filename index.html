@@ -1,1 +1,386 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="酷澎優惠商品搜尋｜快速搜尋熱門商品與優惠好物"><title>酷澎優惠站｜搜尋你想買的商品</title><link rel="stylesheet" href="style.css"></head><body><header class="topbar"><div class="wrap nav"><a class="logo" href="./">酷澎優惠站 <span>COUPANG</span></a><a class="line-btn" href="https://line.me/ti/g2/Nk32r-7LoAClQc-OWqNbH3yzqUzCZT2Re8s0Mg?utm_source" target="_blank" rel="noopener">加入 LINE</a></div></header><main><section class="hero"><div class="wrap"><p class="eyebrow">COUPANG PARTNERS</p><h1>想買什麼？<br><strong>直接搜尋酷澎商品</strong></h1><p class="hero-text">輸入商品名稱，快速找到酷澎上的商品。價格與庫存以酷澎商品頁最新資訊為準。</p><form id="searchForm" class="search"><input id="searchInput" type="search" placeholder="例如：耳機、除濕機、衛生紙、洗衣精"><button id="searchBtn">搜尋</button></form><div class="quick"><span>熱門搜尋：</span><button data-keyword="耳機">耳機</button><button data-keyword="除濕機">除濕機</button><button data-keyword="吸塵器">吸塵器</button><button data-keyword="衛生紙">衛生紙</button></div><p id="status" class="status"></p></div></section><section class="wrap section"><div class="section-head"><div><p class="eyebrow">SEARCH</p><h2 id="resultTitle">搜尋商品</h2></div><button id="clearBtn" class="ghost">清除</button></div><div id="products" class="grid"><div class="empty">輸入商品名稱開始搜尋</div></div></section><section class="wrap section"><div class="notice"><strong>🛒 找到商品後</strong><span>點擊「前往酷澎」即可查看最新價格、優惠與配送資訊。</span></div></section></main><footer><div class="wrap">酷澎優惠站｜商品價格、庫存、優惠與配送條件以酷澎頁面為準</div></footer><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="zh-Hant">
+
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="酷澎優惠站｜快速搜尋酷澎熱門商品、首購優惠與合作夥伴優惠商品"
+  >
+
+  <meta
+    name="robots"
+    content="index,follow"
+  >
+
+  <title>酷澎優惠站｜熱門商品與優惠搜尋</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link
+    rel="icon"
+    href="data:,"
+  >
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     頂部
+========================= -->
+
+<header class="topbar">
+
+  <div class="wrap nav">
+
+    <a
+      class="logo"
+      href="./"
+    >
+      酷澎優惠站
+      <span>COUPANG</span>
+    </a>
+
+
+    <a
+      class="line-btn"
+      href="https://line.me/ti/g2/Nk32r-7LoAClQc-OWqNbH3yzqUzCZT2Re8s0Mg?utm_source"
+      target="_blank"
+      rel="noopener"
+    >
+      加入 LINE
+    </a>
+
+  </div>
+
+</header>
+
+
+
+<main>
+
+
+<!-- =========================
+     Hero
+========================= -->
+
+<section class="hero">
+
+  <div class="wrap">
+
+    <p class="eyebrow">
+      COUPANG PARTNERS
+    </p>
+
+
+    <h1>
+      想買什麼？
+      <br>
+      <strong>直接搜尋酷澎商品</strong>
+    </h1>
+
+
+    <p class="hero-text">
+      搜尋酷澎熱門商品，快速找到商品價格與優惠資訊。
+      點擊商品即可前往酷澎查看最新優惠。
+    </p>
+
+
+
+    <!-- 搜尋 -->
+
+    <form
+      id="searchForm"
+      class="search"
+    >
+
+      <input
+        id="searchInput"
+        type="search"
+        autocomplete="off"
+        placeholder="例如：耳機、除濕機、衛生紙、洗衣精"
+        aria-label="搜尋酷澎商品"
+      >
+
+
+      <button
+        id="searchBtn"
+        type="submit"
+      >
+        🔍 搜尋
+      </button>
+
+    </form>
+
+
+
+    <!-- 熱門搜尋 -->
+
+    <div class="quick">
+
+      <span>
+        🔥 熱門搜尋：
+      </span>
+
+
+      <button
+        type="button"
+        data-keyword="耳機"
+      >
+        🎧 耳機
+      </button>
+
+
+      <button
+        type="button"
+        data-keyword="除濕機"
+      >
+        💧 除濕機
+      </button>
+
+
+      <button
+        type="button"
+        data-keyword="吸塵器"
+      >
+        🧹 吸塵器
+      </button>
+
+
+      <button
+        type="button"
+        data-keyword="衛生紙"
+      >
+        🧻 衛生紙
+      </button>
+
+
+      <button
+        type="button"
+        data-keyword="洗衣精"
+      >
+        🧴 洗衣精
+      </button>
+
+
+      <button
+        type="button"
+        data-keyword="筆電"
+      >
+        💻 筆電
+      </button>
+
+    </div>
+
+
+    <p
+      id="status"
+      class="status"
+    ></p>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     合作夥伴揭露
+========================= -->
+
+<section class="wrap disclosure-section">
+
+  <div class="affiliate-disclosure">
+
+    <strong>
+      💰 合作夥伴連結說明
+    </strong>
+
+    <p>
+      本網站部分商品連結為合作夥伴連結。
+      當您透過本站連結購買商品時，
+      我可能會從合作夥伴活動中收取佣金，
+      但不會因此增加您的購買價格。
+    </p>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     搜尋結果
+========================= -->
+
+<section class="wrap section">
+
+  <div class="section-head">
+
+    <div>
+
+      <p class="eyebrow">
+        SEARCH RESULTS
+      </p>
+
+
+      <h2 id="resultTitle">
+        🔥 熱門商品
+      </h2>
+
+    </div>
+
+
+    <button
+      id="clearBtn"
+      class="ghost"
+      type="button"
+    >
+      清除
+    </button>
+
+  </div>
+
+
+
+  <div
+    id="products"
+    class="grid"
+  >
+
+    <div class="empty">
+
+      <div class="empty-icon">
+        🛒
+      </div>
+
+      <strong>
+        開始尋找你想買的商品
+      </strong>
+
+      <span>
+        輸入商品名稱，立即搜尋酷澎商品
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     購物提示
+========================= -->
+
+<section class="wrap section">
+
+  <div class="notice">
+
+    <div class="notice-icon">
+      🛍️
+    </div>
+
+
+    <div>
+
+      <strong>
+        找到喜歡的商品了嗎？
+      </strong>
+
+      <span>
+        點擊「查看酷澎優惠」即可前往酷澎查看最新價格、
+        優惠、庫存與配送資訊。
+      </span>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =========================
+     SEO 內容
+========================= -->
+
+<section class="wrap seo-section">
+
+  <p class="eyebrow">
+    ABOUT COUPANG
+  </p>
+
+
+  <h2>
+    酷澎優惠商品搜尋
+  </h2>
+
+
+  <p>
+    想找耳機、除濕機、吸塵器、衛生紙、洗衣精、
+    生活用品或 3C 商品？可以直接透過本站搜尋酷澎商品。
+  </p>
+
+
+  <p>
+    商品價格、庫存、優惠活動與配送條件可能隨時變動，
+    實際資訊請以酷澎商品頁面顯示內容為準。
+  </p>
+
+</section>
+
+
+</main>
+
+
+
+<!-- =========================
+     Footer
+========================= -->
+
+<footer>
+
+  <div class="wrap">
+
+    <div class="footer-main">
+      酷澎優惠站
+    </div>
+
+
+    <div class="footer-text">
+
+      商品價格、庫存、優惠與配送條件
+      以酷澎商品頁面最新資訊為準。
+
+    </div>
+
+
+    <div class="footer-disclosure">
+
+      本網站部分連結為合作夥伴連結，
+      透過連結購買商品時，
+      我可能會從合作夥伴活動中收取佣金。
+
+    </div>
+
+  </div>
+
+</footer>
+
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
