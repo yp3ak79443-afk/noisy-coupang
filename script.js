@@ -324,7 +324,7 @@ async function search() {
 
     $("products").innerHTML = `
       <div class="empty">
-        `${esc(e.message || "搜尋失敗")}`
+        ${esc(e.message || "搜尋失敗")}
       </div>
     `;
 
