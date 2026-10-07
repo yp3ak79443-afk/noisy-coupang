@@ -496,7 +496,7 @@ function getSignedDate() {
     ).padStart(2, "0");
 
   return (
-    `${yyyy}${MM}${dd}T${HH}${mm}${ss}Z`
+  `${String(yyyy).slice(-2)}${MM}${dd}T${HH}${mm}${ss}Z`
   );
 }
 
