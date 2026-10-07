@@ -313,7 +313,7 @@ async function search() {
 
     $("status").textContent =
       items.length
-        ? 找到 ${items.length} 筆商品
+        ? `找到 ${items.length} 筆商品`
         : "沒有找到符合條件的商品";
 
 
@@ -324,7 +324,7 @@ async function search() {
 
     $("products").innerHTML = `
       <div class="empty">
-        ${esc(e.message || "搜尋失敗")}
+        `${esc(e.message || "搜尋失敗")}`
       </div>
     `;
 
