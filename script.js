@@ -809,7 +809,7 @@ function renderEvents(events) {
           <div class="event-meta">
             ${
               productCount
-                ? 🛍️ ${productCount} 件商品
+                ? `🛍️ ${productCount} 件商品`
                 : "🛍️ 熱門商品"
             }
           </div>
