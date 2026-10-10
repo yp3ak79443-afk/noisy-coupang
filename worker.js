@@ -165,9 +165,9 @@ export default {
 
         const target =
           "https://stan-declined-tickets-opportunity.trycloudflare.com" +
-          /api/events-products?eventId=${encodeURIComponent(eventId)} +
-          &limit=${limit}&offset=${offset} +
-          &subId=${encodeURIComponent(subId)} +
+          `/api/events-products?eventId=${encodeURIComponent(eventId)}` +
+          `&limit=${limit}&offset=${offset}` +
+          `&subId=${encodeURIComponent(subId)}` +
           `&imageSize=${encodeURIComponent(imageSize)}`;
 
         const response = await fetch(target);
@@ -181,71 +181,44 @@ export default {
           }
         });
       }
-
       // =========================
-      // 商品搜尋：保留原本功能
+      // 商品搜尋：透過本機 Proxy Tunnel
       // =========================
       if (url.pathname === "/api/search") {
         const keyword =
           url.searchParams.get("keyword") || "";
-
         const limit = Math.min(
           Math.max(Number(url.searchParams.get("limit") || 10), 1),
           20
         );
-
         if (!keyword.trim()) {
           return json({
             ok: false,
             message: "請輸入搜尋關鍵字"
           }, corsHeaders, 400);
         }
-
-        const path = `${API_ROOT}/v1/products/search`;
-
         const subId =
           url.searchParams.get("subId") ||
           env.COUPANG_SUB_ID ||
           "Kai";
-
         const imageSize =
           url.searchParams.get("imageSize") ||
           "512x512";
-
-        const query =
-          `keyword=${encodeURIComponent(keyword)}` +
+        const target =
+          "https://stan-declined-tickets-opportunity.trycloudflare.com" +
+          `/api/search?keyword=${encodeURIComponent(keyword)}` +
           `&limit=${limit}` +
           `&subId=${encodeURIComponent(subId)}` +
           `&imageSize=${encodeURIComponent(imageSize)}`;
-
-        const result = await callCoupang(
-          env,
-          baseUrl,
-          "GET",
-          path,
-          query,
-          null
-        );
-
-        if (!result.ok) {
-          return json({
-            ok: false,
-            status: result.status,
-            statusText: result.statusText,
-            endpoint: path,
-            contentType: result.contentType,
-            message: "Coupang search API request failed",
-            raw: result.body
-          }, corsHeaders, 200);
-        }
-
-        return json({
-          ok: true,
-          data: result.data,
-          raw: result.data ? null : result.body,
-          status: result.status,
-          contentType: result.contentType
-        }, corsHeaders);
+        const response = await fetch(target);
+        const text = await response.text();
+        return new Response(text, {
+          status: response.status,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json; charset=utf-8"
+          }
+        });
       }
       
       // =========================
