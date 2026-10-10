@@ -1,4 +1,4 @@
-const API_BASE = "https://mama-coupang-api.yp3ak79443.workers.dev";
+const API_BASE = "https://api.noisy-ec.com";
 
 const $ = id => document.getElementById(id);
 
@@ -686,11 +686,27 @@ document
 const COUPANG_SUB_ID = "Kai";
 
 function getEventItems(d) {
-  return d?.data?.data?.data || [];
+  const candidates = [
+    d?.data?.data,
+    d?.data?.data?.data,
+    d?.data?.data?.eventData,
+    d?.data?.eventData,
+    d?.eventData
+  ];
+
+  return candidates.find(Array.isArray) || [];
 }
 
 function getEventProducts(d) {
-  return d?.data?.data?.data || [];
+  const candidates = [
+    d?.data?.data,
+    d?.data?.data?.productData,
+    d?.data?.data?.data,
+    d?.data?.productData,
+    d?.productData
+  ];
+
+  return candidates.find(Array.isArray) || getItems(d);
 }
 
 function formatEventDate(value) {
